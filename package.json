@@ -1,0 +1,19 @@
+{
+    "name": "com.hashbytestudio.gameboard.general",
+    "version": "1.0.0",
+    "displayName": "Hashbyte - Gameboard General Functionality",
+    "description": "Includes general gameboard functionalities like, Arming, Player Drawer, etc. for plug and play",
+    "unity": "2022.3",
+    "author": {
+        "name": "Hashbyte Studios Pvt Ltd",
+        "email": "bakshish@hashbytestudio.com",
+        "url": "https://www.hashbytestudio.com"
+    },
+    "samples":[
+        {
+            "displayName": "Arming Lobby",
+            "description": "Arming Lobby with simple arming connected with player drawers",
+            "path": "Samples~/Arming Lobby"
+        }
+    ]
+}

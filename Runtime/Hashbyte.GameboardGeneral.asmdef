@@ -1,0 +1,16 @@
+{
+    "name": "Hashbyte.GameboardGeneral",
+    "rootNamespace": "",
+    "references": [
+        "GUID:2a9925052abf45a40bd22a1933542c2f"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
