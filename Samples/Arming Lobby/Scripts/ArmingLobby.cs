@@ -6,7 +6,7 @@ namespace Hashbyte.GameboardGeneral
     {        
         [SerializeField] List<ArmingWidget> armingWidgets;
         private Dictionary<ePlayerDirection, ArmingWidget> playersMap;
-
+        private bool isInitialized;
         #region Singleton
         public static ArmingLobby Instance { get; private set; }
         private void Awake()
@@ -38,6 +38,7 @@ namespace Hashbyte.GameboardGeneral
                 }
             }
             HashbyteUserUpdates.Instance.Register(this);
+            isInitialized = true;
         }
         #endregion
         public void PlayerArmed(ePlayerDirection direction, bool isArmed)
@@ -51,19 +52,22 @@ namespace Hashbyte.GameboardGeneral
 
         public void OnPlayerLoginToDrawer(ePlayerDirection direction, PlayerPresence presence)
         {
-            Debug.Log($"Player login to drawer received");
+            if(!isInitialized) Initialize();
+            Debug.Log($"Player login to drawer received {direction} {presence.userName}");
             playersMap[direction].UpdatePresence(presence);
         }
 
         public void OnPlayerLogout(ePlayerDirection direction, PlayerPresence presence)
         {
-            Debug.Log($"Player logout to drawer received");
+            if (!isInitialized) Initialize();
+            Debug.Log($"Player logout to drawer received {direction} {presence.userName}");
             playersMap[direction].UpdatePresence(presence);
         }
 
         public void OnPlayerChangePosition(ePlayerDirection direction, PlayerPresence presence)
         {
-            Debug.Log($"Player position change received");
+            if (!isInitialized) Initialize();
+            Debug.Log($"Player position change received {direction}, {presence.userName}");
             playersMap[direction].UpdatePresence(presence);
         }
 

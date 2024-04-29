@@ -31,6 +31,7 @@ namespace Hashbyte.GameboardGeneral
                 loginObject.SetActive(true);
                 armingObject.SetActive(false);
             }
+            Debug.Log("Presence updated");
         }        
 
         public void GUI_ArmDisarm()
