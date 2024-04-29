@@ -5,6 +5,8 @@ namespace Hashbyte.GameboardGeneral
     public class ArmingLobby : MonoBehaviour, IPlayerUpdates
     {        
         [SerializeField] List<ArmingWidget> armingWidgets;
+        public GameObject armedPlayerObj;
+        public eArmingRestriction restrictions;
         private Dictionary<ePlayerDirection, ArmingWidget> playersMap;
         private bool isInitialized;
         #region Singleton
@@ -39,11 +41,44 @@ namespace Hashbyte.GameboardGeneral
             }
             HashbyteUserUpdates.Instance.Register(this);
             isInitialized = true;
+#if UNITY_EDITOR
+            editorTest = new EditorTest();
+#endif
         }
         #endregion
-        public void PlayerArmed(ePlayerDirection direction, bool isArmed)
-        {
 
+#if UNITY_EDITOR
+        EditorTest editorTest;
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                 for(int i=0; i<8; i++)
+                {
+                    OnPlayerLoginToDrawer(editorTest.GetUser(out PlayerPresence presence), presence);
+                }
+            }
+        }
+#endif
+        public bool CanBeArmed(ePlayerDirection direction, bool isArmed)
+        {
+            if ((restrictions & eArmingRestriction.ONE_PER_SIDE) != 0) return RestrictToOnePlayerPerSide();
+            else if ((restrictions & eArmingRestriction.TWO_PLAYER) != 0) return RestrictToTwoPlayers();
+            else if((restrictions & eArmingRestriction.OPPOSITE_ONLY) != 0) return RestrictOppositeOnly();
+            return true;
+        }
+
+        private bool RestrictToOnePlayerPerSide()
+        {
+            return true;
+        }
+        private bool RestrictToTwoPlayers()
+        {
+            return true;
+        }
+        private bool RestrictOppositeOnly()
+        {
+            return true;
         }
         public void PlayerUpdate(ePlayerDirection direction, PlayerPresence playerPresence)
         {

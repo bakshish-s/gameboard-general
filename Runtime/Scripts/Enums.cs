@@ -1,3 +1,4 @@
+
 namespace Hashbyte.GameboardGeneral
 {
     public enum ePlayerDirection
@@ -11,5 +12,13 @@ namespace Hashbyte.GameboardGeneral
         BOTTOM_LEFT = 6,
         LEFT_BOTTOM = 7,
         LEFT_TOP = 8,
+    }
+    [System.Flags]
+    public enum eArmingRestriction
+    {        
+        ONE_PER_SIDE = 1,
+        OPPOSITE_ONLY = 2,
+        TWO_PLAYER = 4,
+
     }
 }

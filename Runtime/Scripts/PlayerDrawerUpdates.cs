@@ -41,7 +41,7 @@ namespace Hashbyte.GameboardGeneral
             switch (changeInfo.changeValue)
             {
                 case Gameboard.DataTypes.UserPresenceChangeTypes.REMOVE:
-                    RemovePlayer(changeInfo);
+                    RemovePlayer(playerPosition, changeInfo);
                     break;
                 case Gameboard.DataTypes.UserPresenceChangeTypes.UNKNOWN:
                 case Gameboard.DataTypes.UserPresenceChangeTypes.ADD:
@@ -54,9 +54,11 @@ namespace Hashbyte.GameboardGeneral
             }
         }
 
-        private void RemovePlayer(GameboardUserPresenceEventArgs removedPlayer)
+        private void RemovePlayer(ePlayerDirection fromPosition, GameboardUserPresenceEventArgs removedPlayer)
         {
-
+            PlayerDatabase[fromPosition].isLoggedIn = false;
+            DirectionsMap.Remove(removedPlayer.userId);
+            foreach (IPlayerUpdates playerUpdates in playerUpdateListeners) playerUpdates.OnPlayerLogout(fromPosition, PlayerDatabase[fromPosition]);
         }
         private void UpdateUserDrawer(ePlayerDirection newPosition, GameboardUserPresenceEventArgs changeInfo)
         {
