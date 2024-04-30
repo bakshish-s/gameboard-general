@@ -13,7 +13,7 @@
         {
             "displayName": "Arming Lobby",
             "description": "Arming Lobby with simple arming connected with player drawers",
-            "path": "Samples~/Arming Lobby"
+            "path": "Samples/Arming Lobby"
         }
     ]
 }
