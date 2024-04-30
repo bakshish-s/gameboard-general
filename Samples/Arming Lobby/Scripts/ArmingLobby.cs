@@ -4,11 +4,16 @@ namespace Hashbyte.GameboardGeneral
 {
     public class ArmingLobby : MonoBehaviour, IPlayerUpdates
     {        
-        [SerializeField] List<ArmingWidget> armingWidgets;
         public GameObject armedPlayerObj;
-        public eArmingRestriction restrictions;
+        [SerializeField] List<ArmingWidget> armingWidgets;
+        [SerializeField] eArmingRestriction restrictions;
+        [Range(1, 8)]
+        [SerializeField] int maxPlayers;
+        [SerializeField] TMPro.TextMeshProUGUI errorText;
+
         private Dictionary<ePlayerDirection, ArmingWidget> playersMap;
         private bool isInitialized;
+        private List<ePlayerDirection> armedDirections;
         #region Singleton
         public static ArmingLobby Instance { get; private set; }
         private void Awake()
@@ -30,8 +35,7 @@ namespace Hashbyte.GameboardGeneral
             foreach(ArmingWidget armingWidget in armingWidgets)
             {
                 if (!playersMap.ContainsKey(armingWidget.direction))
-                {
-                    Debug.Log($"Drawer added at position {armingWidget.direction}");
+                {                    
                     playersMap.Add(armingWidget.direction, armingWidget);
                 }
                 else
@@ -41,6 +45,7 @@ namespace Hashbyte.GameboardGeneral
             }
             HashbyteUserUpdates.Instance.Register(this);
             isInitialized = true;
+            armedDirections = new List<ePlayerDirection>();
 #if UNITY_EDITOR
             editorTest = new EditorTest();
 #endif
@@ -60,24 +65,60 @@ namespace Hashbyte.GameboardGeneral
             }
         }
 #endif
-        public bool CanBeArmed(ePlayerDirection direction, bool isArmed)
+        public bool CanBeArmed(ePlayerDirection direction, bool isArming)
         {
-            if ((restrictions & eArmingRestriction.ONE_PER_SIDE) != 0) return RestrictToOnePlayerPerSide();
-            else if ((restrictions & eArmingRestriction.TWO_PLAYER) != 0) return RestrictToTwoPlayers();
-            else if((restrictions & eArmingRestriction.OPPOSITE_ONLY) != 0) return RestrictOppositeOnly();
-            return true;
+            errorText.text = "";
+            if (!isArming) { armedDirections.Remove(direction); CheckOtherPlayerDisplay(); return true; }
+            else if (armedDirections.Count == 0) { armedDirections.Add(direction); return true; }            
+            bool canBeArmed = true;
+            if ((restrictions & eArmingRestriction.ONE_PER_SIDE) != 0) canBeArmed = RestrictToOnePlayerPerSide(direction, isArming) && canBeArmed;            
+            if((restrictions & eArmingRestriction.OPPOSITE_ONLY) != 0) canBeArmed = RestrictOppositeOnly(direction, isArming) && canBeArmed;
+            if (canBeArmed) armedDirections.Add(direction);
+            CheckOtherPlayerDisplay();
+            return canBeArmed;
         }
 
-        private bool RestrictToOnePlayerPerSide()
+        private void CheckOtherPlayerDisplay()
         {
-            return true;
+            if (armedDirections.Count == maxPlayers)
+            {
+                foreach (ePlayerDirection armingPosition in playersMap.Keys)
+                {
+                    if (armedDirections.Contains(armingPosition)) continue;
+                    playersMap[armingPosition].HideArming(true);
+                }
+            }
+            else
+            {
+                foreach (ePlayerDirection armingPosition in playersMap.Keys)
+                {                    
+                    playersMap[armingPosition].HideArming(false);
+                }
+            }
         }
-        private bool RestrictToTwoPlayers()
-        {
+
+        private bool RestrictToOnePlayerPerSide(ePlayerDirection playerDirection, bool isArming)
+        {                        
+            foreach(ePlayerDirection currentDirection in armedDirections)
+            {
+                 if (currentDirection.IsOnSameSide(playerDirection))
+                 {
+                    errorText.text = $"Players on the same side cannot be armed";
+                    return false;
+                 }
+            }            
             return true;
-        }
-        private bool RestrictOppositeOnly()
+        }        
+        private bool RestrictOppositeOnly(ePlayerDirection playerDirection, bool isArming)
         {
+            foreach (ePlayerDirection currentDirection in armedDirections)
+            {                
+                if (!currentDirection.IsOnOppositeSide(playerDirection))
+                {
+                    errorText.text = $"Only players on opposite side can play";
+                    return false;
+                }
+            }
             return true;
         }
         public void PlayerUpdate(ePlayerDirection direction, PlayerPresence playerPresence)
@@ -88,7 +129,7 @@ namespace Hashbyte.GameboardGeneral
         public void OnPlayerLoginToDrawer(ePlayerDirection direction, PlayerPresence presence)
         {
             if(!isInitialized) Initialize();
-            Debug.Log($"Player login to drawer received {direction} {presence.userName}");
+            //Debug.Log($"Player login to drawer received {direction} {presence.userName}");
             playersMap[direction].UpdatePresence(presence);
         }
 

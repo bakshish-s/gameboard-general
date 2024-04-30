@@ -17,8 +17,6 @@ namespace Hashbyte.GameboardGeneral
     public enum eArmingRestriction
     {        
         ONE_PER_SIDE = 1,
-        OPPOSITE_ONLY = 2,
-        TWO_PLAYER = 4,
-
+        OPPOSITE_ONLY = 2,        
     }
 }

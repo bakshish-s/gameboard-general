@@ -12,6 +12,7 @@ namespace Hashbyte.GameboardGeneral
         private bool isArmed;
         private ArmedPlayer armedPlayerObject;
         private PlayerPresence playerPresence;
+        private bool isShowing;
 
         public void Awake()
         {
@@ -37,8 +38,8 @@ namespace Hashbyte.GameboardGeneral
 
         public void GUI_ArmDisarm()
         {
+            if (!ArmingLobby.Instance.CanBeArmed(direction, !isArmed)) return;
             isArmed = !isArmed;
-            ArmingLobby.Instance.CanBeArmed(direction, isArmed);
             if (isArmed)
             {
                 if(armedPlayerObject == null)armedPlayerObject = Instantiate(ArmingLobby.Instance.armedPlayerObj, ArmingLobby.Instance.armedPlayerObj.transform.parent).GetComponent<ArmedPlayer>();
@@ -50,6 +51,27 @@ namespace Hashbyte.GameboardGeneral
             {
                 armedPlayerObject.gameObject.SetActive(false);
                 armText.text = "Arm Player";
+            }
+        }
+
+        public void HideArming(bool hide)
+        {
+            if (hide)
+            {
+                isShowing = false;
+                loginObject.SetActive(false);
+                armingObject.SetActive(false);
+            }else if (!isShowing)
+            {
+                if (playerPresence != null && playerPresence.isLoggedIn)
+                {
+                    armingObject.SetActive(true);
+                }
+                else
+                {
+                    loginObject.SetActive(true);
+                }
+                isShowing = true;
             }
         }
         
