@@ -1,11 +1,8 @@
-using Gameboard;
 using Gameboard.EventArgs;
-using Hashbyte.GameboardGeneral;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-
+namespace Hashbyte.GameboardGeneral
+{
 public class EditorTest
 {
     internal List<string> alignment = new List<string>() {
@@ -70,4 +67,5 @@ public class EditorTest
         };        
         return mockBoardPositionsStack.Pop().GetDirection();
     }
+}
 }
