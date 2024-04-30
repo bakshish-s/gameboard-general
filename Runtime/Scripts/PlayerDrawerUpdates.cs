@@ -14,6 +14,8 @@ namespace Hashbyte.GameboardGeneral
         {
             playerUpdateListeners = new List<IPlayerUpdates>();
             DirectionsMap = new Dictionary<string, ePlayerDirection>();
+            PlayerDatabase =
+            Enum.GetValues(typeof(ePlayerDirection)).Cast<ePlayerDirection>().ToDictionary(direction => direction, val => new PlayerPresence());
             var gameboardObject = UnityEngine.GameObject.FindGameObjectWithTag("Gameboard");
             if (gameboardObject == null) throw new EntryPointNotFoundException("Gameboard SDK should be present in scene before using Hashbyte User Updates");
             Gameboard.UserPresenceController userPresenceController = gameboardObject.GetComponent<Gameboard.UserPresenceController>();
@@ -22,9 +24,7 @@ namespace Hashbyte.GameboardGeneral
             else userPresenceController.UserPresenceControllerInitialized += () => { Init(userPresenceController.Users); };
         }
         public void Init(Dictionary<string, GameboardUserPresenceEventArgs> existingUsers)
-        {            
-            PlayerDatabase =
-            Enum.GetValues(typeof(ePlayerDirection)).Cast<ePlayerDirection>().ToDictionary(direction => direction, val => new PlayerPresence());
+        {
             foreach (string userId in existingUsers.Keys)
             {
                 UpdateDatabase(existingUsers[userId]);
@@ -32,7 +32,7 @@ namespace Hashbyte.GameboardGeneral
         }
 
         public void OnPlayerUpdate(GameboardUserPresenceEventArgs changeInfo)
-        {            
+        {
             UpdateDatabase(changeInfo);
         }
         private void UpdateDatabase(GameboardUserPresenceEventArgs changeInfo)
@@ -74,7 +74,7 @@ namespace Hashbyte.GameboardGeneral
                     foreach (IPlayerUpdates playerUpdates in playerUpdateListeners) playerUpdates.OnPlayerLogout(oldPosition, PlayerDatabase[newPosition]);
                 }
                 //If received position is a valid new position, call changePosition
-                if(newPosition != oldPosition)
+                if (newPosition != oldPosition)
                 {
                     PlayerDatabase[newPosition].Update(changeInfo);
                     DirectionsMap[changeInfo.userId] = newPosition;
@@ -92,6 +92,11 @@ namespace Hashbyte.GameboardGeneral
         {
             if (!playerUpdateListeners.Contains(playerUpdates))
                 playerUpdateListeners.Add(playerUpdates);
+            foreach (ePlayerDirection direction in PlayerDatabase.Keys)
+            {
+                if (PlayerDatabase[direction].isLoggedIn)
+                    playerUpdates.OnPlayerLoginToDrawer(direction, PlayerDatabase[direction]);
+            }
         }
 
         public void UnregisterForUpdates(IPlayerUpdates unregister)
