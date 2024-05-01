@@ -111,6 +111,7 @@ namespace Hashbyte.GameboardGeneral
         public string userId;
         public string userName;
         public bool isLoggedIn;
+        public ePlayerDirection direction;
         public PlayerPresence() { isLoggedIn = false; }
         public PlayerPresence(GameboardUserPresenceEventArgs userInfo)
         {
@@ -123,6 +124,7 @@ namespace Hashbyte.GameboardGeneral
             userId = userInfo.userId;
             userName = userInfo.userName;
             isLoggedIn = true;
+            direction = userInfo.boardUserPosition.GetDirection();
         }
     }
 }
