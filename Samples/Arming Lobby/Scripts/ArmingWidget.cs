@@ -33,8 +33,15 @@ namespace Hashbyte.GameboardGeneral
             {
                 loginObject.SetActive(true);
                 armingObject.SetActive(false);
-            }            
-        }        
+            }
+            if (isArmed)
+            {
+                armedPlayerObject.gameObject.SetActive(false);
+                armText.text = "Arm Player";
+                isArmed = false;
+                ArmingLobby.Instance.CanBeArmed(direction, isArmed);
+            }
+        }
 
         public void GUI_ArmDisarm()
         {
