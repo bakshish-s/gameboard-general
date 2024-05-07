@@ -71,7 +71,7 @@ namespace Hashbyte.GameboardGeneral
                 if (!PlayerDatabase[newPosition].isLoggedIn)
                 {
                     PlayerDatabase[oldPosition].isLoggedIn = false;
-                    foreach (IPlayerUpdates playerUpdates in playerUpdateListeners) playerUpdates.OnPlayerLogout(oldPosition, PlayerDatabase[newPosition]);
+                    foreach (IPlayerUpdates playerUpdates in playerUpdateListeners) playerUpdates.OnPlayerLogout(oldPosition, PlayerDatabase[oldPosition]);
                 }
                 //If received position is a valid new position, call changePosition
                 if (newPosition != oldPosition)
