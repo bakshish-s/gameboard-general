@@ -17,5 +17,10 @@ namespace Hashbyte.GameboardGeneral
         {
             playerDrawerUpdates.RegisterForUpdates(updates);
         }
+        public void UpdateDrawerVisibility(bool show)
+        {
+            if(show) playerDrawerUpdates.drawerController.ShowDrawers();
+            else playerDrawerUpdates.drawerController.HideDrawers();
+        }
     }
 }
