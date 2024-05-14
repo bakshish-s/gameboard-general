@@ -17,6 +17,10 @@ namespace Hashbyte.GameboardGeneral
         {
             playerDrawerUpdates.RegisterForUpdates(updates);
         }
+        public void Unregister(IPlayerUpdates updates)
+        {
+            playerDrawerUpdates.UnregisterForUpdates(updates);
+        }
         public void UpdateDrawerVisibility(bool show)
         {
             if(show) playerDrawerUpdates.drawerController.ShowDrawers();
