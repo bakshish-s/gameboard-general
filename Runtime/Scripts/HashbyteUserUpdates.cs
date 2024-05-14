@@ -12,8 +12,7 @@ namespace Hashbyte.GameboardGeneral
         #endregion        
 
         private PlayerDrawerUpdates playerDrawerUpdates;
-        public System.Collections.Generic.Dictionary<ePlayerDirection, PlayerPresence> PlayerDatabase => playerDrawerUpdates.PlayerDatabase;
-        public Gameboard.RatingController ratingController => playerDrawerUpdates.ratingController;
+        public System.Collections.Generic.Dictionary<ePlayerDirection, PlayerPresence> PlayerDatabase => playerDrawerUpdates.PlayerDatabase;        
         public void Register(IPlayerUpdates updates)
         {
             playerDrawerUpdates.RegisterForUpdates(updates);
@@ -29,5 +28,10 @@ namespace Hashbyte.GameboardGeneral
             if (started) playerDrawerUpdates.engagementController.SendGameSessionStarted(userIds);
             else playerDrawerUpdates.engagementController.SendGameSessionEnded(userIds);
         }        
+
+        public void SendRankingReport(Gameboard.Objects.Engagement.RankingReportMetric report)
+        {
+            playerDrawerUpdates.engagementController.SendRankingReport(report);
+        }
     }
 }
