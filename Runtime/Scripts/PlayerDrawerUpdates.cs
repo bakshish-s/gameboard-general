@@ -11,6 +11,8 @@ namespace Hashbyte.GameboardGeneral
         public Dictionary<string, ePlayerDirection> DirectionsMap;
         private List<IPlayerUpdates> playerUpdateListeners;
         public readonly Gameboard.DrawerController drawerController;
+        public readonly Gameboard.EngagementController engagementController;
+        public readonly Gameboard.RatingController ratingController;
         public PlayerDrawerUpdates()
         {
             playerUpdateListeners = new List<IPlayerUpdates>();
@@ -21,6 +23,8 @@ namespace Hashbyte.GameboardGeneral
             if (gameboardObject == null) throw new EntryPointNotFoundException("Gameboard SDK should be present in scene before using Hashbyte User Updates");
             Gameboard.UserPresenceController userPresenceController = gameboardObject.GetComponent<Gameboard.UserPresenceController>();
             drawerController = gameboardObject.GetComponent<Gameboard.DrawerController>();
+            engagementController = gameboardObject.GetComponent<Gameboard.EngagementController>();
+            ratingController = gameboardObject.GetComponent<Gameboard.RatingController>();
             userPresenceController.OnUserPresence += OnPlayerUpdate;
             if (userPresenceController.IsInitialized) Init(userPresenceController.Users);
             else userPresenceController.UserPresenceControllerInitialized += () => { Init(userPresenceController.Users); };

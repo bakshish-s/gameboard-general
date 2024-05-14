@@ -13,6 +13,7 @@ namespace Hashbyte.GameboardGeneral
 
         private PlayerDrawerUpdates playerDrawerUpdates;
         public System.Collections.Generic.Dictionary<ePlayerDirection, PlayerPresence> PlayerDatabase => playerDrawerUpdates.PlayerDatabase;
+        public Gameboard.RatingController ratingController => playerDrawerUpdates.ratingController;
         public void Register(IPlayerUpdates updates)
         {
             playerDrawerUpdates.RegisterForUpdates(updates);
@@ -22,5 +23,11 @@ namespace Hashbyte.GameboardGeneral
             if(show) playerDrawerUpdates.drawerController.ShowDrawers();
             else playerDrawerUpdates.drawerController.HideDrawers();
         }
+
+        public void SendGameSessionEvent(bool started, System.Collections.Generic.List<string> userIds)
+        {
+            if (started) playerDrawerUpdates.engagementController.SendGameSessionStarted(userIds);
+            else playerDrawerUpdates.engagementController.SendGameSessionEnded(userIds);
+        }        
     }
 }
