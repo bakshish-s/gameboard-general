@@ -37,5 +37,10 @@ namespace Hashbyte.GameboardGeneral
         {
             playerDrawerUpdates.engagementController.SendRankingReport(report);
         }
+
+        public void ForceRanking()
+        {
+            playerDrawerUpdates.ForceUpdate();
+        }
     }
 }
