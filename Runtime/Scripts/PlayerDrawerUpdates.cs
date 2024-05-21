@@ -107,6 +107,16 @@ namespace Hashbyte.GameboardGeneral
         {
             playerUpdateListeners.Remove(unregister);
         }
+
+        public void ForceUpdate()
+        {
+            var gameboardObject = UnityEngine.GameObject.FindGameObjectWithTag("Gameboard");
+            Gameboard.UserPresenceController userPresenceController = gameboardObject.GetComponent<Gameboard.UserPresenceController>();
+            foreach(GameboardUserPresenceEventArgs presence in userPresenceController.Users.Values)
+            {                
+                UpdateDatabase(presence);
+            }
+        }
     }
 
     public class PlayerPresence
